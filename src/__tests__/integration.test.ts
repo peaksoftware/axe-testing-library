@@ -47,20 +47,18 @@ describe("AxeTester Integration Tests", () => {
   it("should handle custom rules", async () => {
     // Create HTML with specific structure
     document.body.innerHTML = `
-      <div>
-        <h1>Title</h1>
-        <p>Some content</p>
-        <table>
-          <tr><td>Data</td></tr>
-        </table>
-      </div>
-    `;
+    <div>
+      <h1>Title</h1>
+      <p>Some content</p>
+      <table>
+        <tr><td>Data</td></tr>
+      </table>
+    </div>
+  `;
 
     await expect(document.body).not.toBeAccessible();
     await expect(document.body).toBeAccessible({
       rules: { region: { enabled: false } },
     });
-
-    // result.violations.forEach((v) => console.log(v));
   });
 });
