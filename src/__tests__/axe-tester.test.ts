@@ -40,11 +40,7 @@ describe("AxeTester", () => {
       // Assert
       expect(axe.run).toHaveBeenCalledWith(
         element,
-        expect.objectContaining({
-          reporter: "v2",
-          severityLevels: expect.any(Object),
-          failFast: false,
-        })
+        expect.objectContaining({ reporter: "v2" })
       );
     });
 

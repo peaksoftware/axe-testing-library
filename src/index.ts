@@ -1,9 +1,6 @@
 import * as axe from "axe-core";
 
-/**
- * Enhanced configuration options for accessibility testing
- */
-export interface AxeTestConfig extends axe.RunOptions {
+type Config = {
   /**
    * Custom severity levels for violations
    */
@@ -23,7 +20,9 @@ export interface AxeTestConfig extends axe.RunOptions {
    * Custom reporter function
    */
   customReporter?: (results: AxeTestResult) => void;
-}
+};
+
+type AxeTesterConfig = Config & axe.RunOptions;
 
 /**
  * Structured result of accessibility testing
@@ -40,19 +39,26 @@ export interface AxeTestResult {
  * Accessibility Testing Class
  */
 export class AxeTester {
-  private config: AxeTestConfig;
+  private axeRunOptions: axe.RunOptions;
+  private axeTesterConfig: Config;
 
-  constructor(config: AxeTestConfig = {}) {
-    this.config = {
-      severityLevels: {
-        critical: 10,
-        serious: 5,
-        moderate: 3,
-        minor: 1,
-      },
-      failFast: false,
-      ...config,
+  constructor({
+    severityLevels = {
+      critical: 10,
+      serious: 5,
+      moderate: 3,
+      minor: 1,
+    },
+    failFast = false,
+    customReporter,
+    ...runOptions
+  }: AxeTesterConfig = {}) {
+    this.axeTesterConfig = {
+      severityLevels,
+      failFast,
+      customReporter,
     };
+    this.axeRunOptions = runOptions;
   }
 
   /**
@@ -61,11 +67,12 @@ export class AxeTester {
    * @param customRules - Optional custom Axe rules
    */
   async test(element: HTMLElement, customRules?: axe.RuleObject) {
-    const results = await axe.run(element, {
-      ...this.config,
-      rules: customRules ?? this.config.rules,
-    });
-
+    const results = await axe.run(
+      element,
+      customRules
+        ? { ...this.axeRunOptions, rules: customRules }
+        : this.axeRunOptions
+    );
     return this.processResults(results);
   }
 
@@ -96,11 +103,11 @@ export class AxeTester {
       severityScore,
     };
 
-    if (this.config.customReporter) {
-      this.config.customReporter(result);
+    if (this.axeTesterConfig.customReporter) {
+      this.axeTesterConfig.customReporter(result);
     }
 
-    if (this.config.failFast && violations.length > 0) {
+    if (this.axeTesterConfig.failFast && violations.length > 0) {
       throw new Error("Accessibility violations detected");
     }
 
@@ -113,7 +120,7 @@ export class AxeTester {
   private calculateSeverityScore(violations: axe.Result[]) {
     return violations.reduce((score, violation) => {
       const impactMultiplier =
-        this.config.severityLevels?.[violation.impact || "minor"] || 1;
+        this.axeTesterConfig.severityLevels?.[violation.impact || "minor"] || 1;
       return score + impactMultiplier;
     }, 0);
   }
@@ -124,7 +131,7 @@ export class AxeTester {
  */
 export async function toBeAccessible(
   received: HTMLElement,
-  options?: AxeTestConfig
+  options?: AxeTesterConfig
 ) {
   const tester = new AxeTester(options);
   const result = await tester.test(received);
@@ -139,7 +146,7 @@ export async function toBeAccessible(
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toBeAccessible(options?: AxeTestConfig): Promise<R>;
+      toBeAccessible(options?: AxeTesterConfig): Promise<R>;
     }
   }
 }

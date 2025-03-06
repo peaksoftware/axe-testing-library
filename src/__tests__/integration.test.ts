@@ -7,12 +7,9 @@ import { JSDOM } from "jsdom";
 expect.extend({ toBeAccessible });
 
 describe("AxeTester Integration Tests", () => {
-  let dom: JSDOM;
-  let document: Document;
-
   beforeEach(() => {
     // Setup a minimal JSDOM environment
-    dom = new JSDOM(`
+    let dom = new JSDOM(`
       <!DOCTYPE html>
       <html>
         <head>
@@ -24,18 +21,16 @@ describe("AxeTester Integration Tests", () => {
       </html>
     `);
 
-    document = dom.window.document;
-
     // Mock global window and document for axe-core
-    global.window = dom.window as any;
-    global.document = document;
+    global.window = dom.window as unknown as Window & typeof globalThis;
+    global.document = dom.window.document;
   });
 
-  afterEach(() => {
-    // Clean up
-    delete global.window;
-    delete global.document;
-  });
+  // afterEach(() => {
+  //   // Clean up
+  //   delete (global as any).window;
+  //   delete (global as any).document;
+  // });
 
   it("should properly detect accessibility violations in actual HTML", async () => {
     // Create a div with accessibility issues (image without alt text)
