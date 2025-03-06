@@ -1,22 +1,17 @@
 import axe from "axe-core";
 import { AxeTester, toBeAccessible } from "../index";
 
-// Mock axe-core
 jest.mock("axe-core", () => ({
   run: jest.fn(),
 }));
 
-// Extend Jest's matchers
 expect.extend({ toBeAccessible });
 
 describe("AxeTester", () => {
   let element: HTMLElement;
 
   beforeEach(() => {
-    // Reset mocks
     jest.clearAllMocks();
-
-    // Create a simple div for testing
     element = document.createElement("div");
   });
 
@@ -44,7 +39,6 @@ describe("AxeTester", () => {
     });
 
     it("should process and return violation results correctly", async () => {
-      // Setup
       const tester = new AxeTester();
       const mockViolation: Partial<axe.Result> = {
         id: "test-violation",
@@ -63,10 +57,8 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute
       const result = await tester.test(element);
 
-      // Assert
       expect(result.passed).toBe(false);
       expect(result.violations).toHaveLength(1);
       expect(result.violationsByImpact).toHaveProperty("serious");
@@ -75,7 +67,6 @@ describe("AxeTester", () => {
     });
 
     it("should call customReporter when provided", async () => {
-      // Setup
       const customReporter = jest.fn();
       const tester = new AxeTester({ customReporter });
 
@@ -88,7 +79,6 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute
       await tester.test(element);
 
       // Assert
@@ -101,7 +91,6 @@ describe("AxeTester", () => {
     });
 
     it("should throw when failFast is true and violations exist", async () => {
-      // Setup
       const tester = new AxeTester({ failFast: true });
 
       const mockViolation: Partial<axe.Result> = {

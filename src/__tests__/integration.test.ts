@@ -1,7 +1,5 @@
-import axe from "axe-core";
 import { AxeTester, toBeAccessible } from "../index";
 
-// Extend Jest's matchers
 expect.extend({ toBeAccessible });
 
 describe("AxeTester Integration Tests", () => {
