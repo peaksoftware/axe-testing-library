@@ -1,4 +1,3 @@
-// src/__tests__/axe-tester.test.ts
 import axe from "axe-core";
 import { AxeTester, toBeAccessible } from "../index";
 
