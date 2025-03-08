@@ -1,12 +1,12 @@
-import { AxeTester, toBeAccessible } from "../index";
+import { JestAxeTester, toBeAccessible } from "../jest";
 
 expect.extend({ toBeAccessible });
 
-describe("AxeTester Integration Tests", () => {
+describe("JestAxeTester Integration Tests", () => {
   async function shouldProperlyDetectAccessibilityViolationsInActualHtml(
     input: HTMLElement | string
   ) {
-    const tester = new AxeTester();
+    const tester = new JestAxeTester();
     const result = await tester.test(input);
 
     expect(result.passed).toBe(false);

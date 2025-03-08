@@ -1,5 +1,5 @@
 import axe from "axe-core";
-import { AxeTester, toBeAccessible } from "../index";
+import { JestAxeTester, toBeAccessible } from "../jest";
 
 jest.mock("axe-core", () => ({
   run: jest.fn(),
@@ -7,7 +7,7 @@ jest.mock("axe-core", () => ({
 
 expect.extend({ toBeAccessible });
 
-describe("AxeTester", () => {
+describe("JestAxeTester", () => {
   let element: HTMLElement;
   let htmlString: string;
 
@@ -19,7 +19,7 @@ describe("AxeTester", () => {
 
   describe("test()", () => {
     it("should call axe.run with the element and config", async () => {
-      const tester = new AxeTester({ reporter: "v2" });
+      const tester = new JestAxeTester({ reporter: "v2" });
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
         passes: [],
@@ -39,7 +39,7 @@ describe("AxeTester", () => {
 
     it("should call customReporter when provided", async () => {
       const customReporter = jest.fn();
-      const tester = new AxeTester({ customReporter });
+      const tester = new JestAxeTester({ customReporter });
 
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
@@ -61,7 +61,7 @@ describe("AxeTester", () => {
     });
 
     it("should throw when failFast is true and violations exist", async () => {
-      const tester = new AxeTester({ failFast: true });
+      const tester = new JestAxeTester({ failFast: true });
 
       const mockViolation: Partial<axe.Result> = {
         id: "test-violation",
@@ -88,7 +88,7 @@ describe("AxeTester", () => {
     async function shouldProcessAndReturnViolationResultsCorrectly(
       input: HTMLElement | string
     ) {
-      const tester = new AxeTester();
+      const tester = new JestAxeTester();
       const mockViolation: Partial<axe.Result> = {
         id: "test-violation",
         impact: "serious",
@@ -129,7 +129,7 @@ describe("AxeTester", () => {
   });
 
   describe("toBeAccessible matcher", () => {
-    it("should pass custom options to AxeTester", async () => {
+    it("should pass custom options to JestAxeTester", async () => {
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
         passes: [],
@@ -186,7 +186,7 @@ describe("AxeTester", () => {
 
       let error;
       try {
-        await expect(element).toBeAccessible();
+        await expect(input).toBeAccessible();
       } catch (e) {
         error = e;
       }

@@ -1,5 +1,6 @@
 import axe from "axe-core";
 import { JSDOM } from "jsdom";
+import { type Page } from "playwright-core";
 
 type Config = {
   /**
@@ -23,7 +24,7 @@ type Config = {
   customReporter?: (results: AxeTestResult) => void;
 };
 
-type AxeTesterConfig = Config & axe.RunOptions;
+export type AxeTesterConfig = Config & axe.RunOptions;
 
 /**
  * Structured result of accessibility testing
@@ -39,7 +40,7 @@ export interface AxeTestResult extends axe.AxeResults {
 /**
  * Accessibility Testing Class
  */
-export class AxeTester {
+export class AxeTester<TInput> {
   private axeRunOptions: axe.RunOptions;
   private axeTesterConfig: Config;
 
@@ -65,11 +66,25 @@ export class AxeTester {
   /**
    * Tests an HTML element or HTML string for accessibility issues
    *
-   * @param {HTMLElement|string} input - The HTML element or HTML string to test
+   * @param {TInput} input - The HTML element or HTML string to test
    * @param {axe.RunOptions} runOptions - Optional custom run options for one-off testing
    * @returns {Promise<AxeTestResult>} - Results from axe testing
    */
   async test(
+    input: TInput,
+    runOptions?: axe.RunOptions
+  ): Promise<AxeTestResult> {
+    throw new Error("the test() method must be implemented");
+  }
+
+  /**
+   * Tests an HTML element or HTML string for accessibility issues
+   *
+   * @param {HTMLElement|string} input - The HTML element or HTML string to test
+   * @param {axe.RunOptions} runOptions - Optional custom run options for one-off testing
+   * @returns {Promise<AxeTestResult>} - Results from axe testing
+   */
+  protected async runAxe(
     input: HTMLElement | string,
     runOptions?: axe.RunOptions
   ): Promise<AxeTestResult> {
@@ -148,29 +163,3 @@ export class AxeTester {
     }, 0);
   }
 }
-
-/**
- * Jest matcher for accessibility testing
- */
-export async function toBeAccessible(
-  received: HTMLElement | string,
-  options?: AxeTesterConfig
-) {
-  const tester = new AxeTester(options);
-  const result = await tester.test(received);
-
-  return {
-    pass: result.passed,
-    message: () => result.violationMessages.join("\n"),
-  };
-}
-
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeAccessible(options?: AxeTesterConfig): Promise<R>;
-    }
-  }
-}
-
-export default AxeTester;
