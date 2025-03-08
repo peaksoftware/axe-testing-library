@@ -66,18 +66,16 @@ export class AxeTester {
    * Tests an HTML element or HTML string for accessibility issues
    *
    * @param {HTMLElement|string} input - The HTML element or HTML string to test
-   * @param {axe.RuleObject} customRules - Optional custom rules for axe testing
+   * @param {axe.RunOptions} runOptions - Optional custom run options for one-off testing
    * @returns {Promise<AxeTestResult>} - Results from axe testing
    */
   async test(
     input: HTMLElement | string,
-    customRules?: axe.RuleObject
+    runOptions?: axe.RunOptions
   ): Promise<AxeTestResult> {
     const results = await axe.run(
       this.getElement(input),
-      customRules
-        ? { ...this.axeRunOptions, rules: customRules }
-        : this.axeRunOptions
+      runOptions ? { ...this.axeRunOptions, ...runOptions } : this.axeRunOptions
     );
     return this.processResults(results);
   }
@@ -93,6 +91,7 @@ export class AxeTester {
 
     if (typeof input === "string") {
       // Verify the input string is valid html
+      // TODO: JSDOM is very lenient and will make bad html valid instead of throwing. should we even check?
       try {
         new JSDOM(`<!DOCTYPE html><body>${input}</body></html>`);
       } catch (error) {
@@ -143,9 +142,9 @@ export class AxeTester {
 
   private calculateSeverityScore(violations: axe.Result[]) {
     return violations.reduce((score, violation) => {
-      const impactMultiplier =
+      const impact =
         this.axeTesterConfig.severityLevels?.[violation.impact || "minor"] || 1;
-      return score + impactMultiplier;
+      return score + impact;
     }, 0);
   }
 }
