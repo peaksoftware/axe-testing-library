@@ -17,7 +17,6 @@ describe("AxeTester", () => {
 
   describe("test()", () => {
     it("should call axe.run with the element and config", async () => {
-      // Setup
       const tester = new AxeTester({ reporter: "v2" });
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
@@ -28,10 +27,8 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute
       await tester.test(element);
 
-      // Assert
       expect(axe.run).toHaveBeenCalledWith(
         element,
         expect.objectContaining({ reporter: "v2" })
@@ -81,7 +78,6 @@ describe("AxeTester", () => {
 
       await tester.test(element);
 
-      // Assert
       expect(customReporter).toHaveBeenCalledWith(
         expect.objectContaining({
           passed: true,
@@ -110,7 +106,6 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute & Assert
       await expect(tester.test(element)).rejects.toThrow(
         "Accessibility violations detected"
       );
@@ -119,7 +114,6 @@ describe("AxeTester", () => {
 
   describe("toBeAccessible matcher", () => {
     it("should pass when no violations exist", async () => {
-      // Setup
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
         passes: [],
@@ -129,12 +123,10 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute & Assert
       await expect(element).toBeAccessible();
     });
 
     it("should fail when violations exist", async () => {
-      // Setup
       const mockViolation: Partial<axe.Result> = {
         id: "test-violation",
         impact: "moderate",
@@ -152,7 +144,6 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute
       let error;
       try {
         await expect(element).toBeAccessible();
@@ -160,13 +151,11 @@ describe("AxeTester", () => {
         error = e;
       }
 
-      // Assert
       expect(error).toBeDefined();
       expect((error as Error).message).toMatch(/MODERATE: Test violation/);
     });
 
     it("should pass custom options to AxeTester", async () => {
-      // Setup
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
         passes: [],
@@ -176,12 +165,10 @@ describe("AxeTester", () => {
 
       (axe.run as jest.Mock).mockResolvedValue(mockResults);
 
-      // Execute
       await expect(element).toBeAccessible({
         rules: { "color-contrast": { enabled: false } },
       });
 
-      // Assert
       expect(axe.run).toHaveBeenCalledWith(
         element,
         expect.objectContaining({

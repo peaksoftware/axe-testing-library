@@ -4,7 +4,6 @@ expect.extend({ toBeAccessible });
 
 describe("AxeTester Integration Tests", () => {
   it("should properly detect accessibility violations in actual HTML", async () => {
-    // Insert a div with accessibility issues (image without alt text)
     document.body.innerHTML = `
       <div>
         <h1>Hello World</h1>
@@ -13,23 +12,19 @@ describe("AxeTester Integration Tests", () => {
       </div>
     `;
 
-    // Create a tester instance
     const tester = new AxeTester();
-
-    // Test the container
     const result = await tester.test(document.body);
 
-    // Assert
     expect(result.passed).toBe(false);
     expect(result.violations.length).toBeGreaterThan(0);
 
-    // Check for specific violation types
     const violationIds = result.violations.map((v) => v.id);
     expect(violationIds).toContain("image-alt");
+    expect(violationIds).toContain("button-name");
+    expect(violationIds).toContain("region");
   });
 
   it("should pass for accessible HTML", async () => {
-    // Create accessible HTML
     document.body.innerHTML = `
       <main>
         <h1>Hello World</h1>
@@ -38,12 +33,10 @@ describe("AxeTester Integration Tests", () => {
       </main>
     `;
 
-    // Test with the matcher
     await expect(document.body).toBeAccessible();
   });
 
   it("should handle custom rules", async () => {
-    // Create HTML with specific structure
     document.body.innerHTML = `
     <div>
       <h1>Title</h1>

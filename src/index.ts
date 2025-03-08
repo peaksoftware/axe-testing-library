@@ -80,34 +80,27 @@ export class AxeTester {
    * Process Axe results and generate enhanced report
    */
   private processResults(results: axe.AxeResults) {
-    const violations = results.violations;
-
-    const violationsByImpact = violations.reduce<Record<string, axe.Result[]>>(
-      (acc, violation) => {
+    const result = {
+      ...results,
+      passed: results.violations.length === 0,
+      violationsByImpact: results.violations.reduce<
+        Record<string, axe.Result[]>
+      >((acc, violation) => {
         const impact = violation.impact || "unknown";
         acc[impact] = [...(acc[impact] || []), violation];
         return acc;
-      },
-      {}
-    );
-
-    const severityScore = this.calculateSeverityScore(violations);
-
-    const result = {
-      passed: violations.length === 0,
-      violations,
-      violationsByImpact,
-      violationMessages: violations.map(
+      }, {}),
+      violationMessages: results.violations.map(
         (v) => `${v.impact?.toUpperCase()}: ${v.description} (${v.helpUrl})`
       ),
-      severityScore,
+      severityScore: this.calculateSeverityScore(results.violations),
     };
 
     if (this.axeTesterConfig.customReporter) {
       this.axeTesterConfig.customReporter(result);
     }
 
-    if (this.axeTesterConfig.failFast && violations.length > 0) {
+    if (this.axeTesterConfig.failFast && results.violations.length > 0) {
       throw new Error("Accessibility violations detected");
     }
 
