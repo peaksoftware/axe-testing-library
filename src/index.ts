@@ -1,4 +1,5 @@
 import axe from "axe-core";
+import { JSDOM } from "jsdom";
 
 type Config = {
   /**
@@ -27,7 +28,7 @@ type AxeTesterConfig = Config & axe.RunOptions;
 /**
  * Structured result of accessibility testing
  */
-export interface AxeTestResult {
+export interface AxeTestResult extends axe.AxeResults {
   passed: boolean;
   violations: axe.Result[];
   violationsByImpact: Record<string, axe.Result[]>;
@@ -62,13 +63,18 @@ export class AxeTester {
   }
 
   /**
-   * Run accessibility checks on a DOM element
-   * @param element - HTML element to test
-   * @param customRules - Optional custom Axe rules
+   * Tests an HTML element or HTML string for accessibility issues
+   *
+   * @param {HTMLElement|string} input - The HTML element or HTML string to test
+   * @param {axe.RuleObject} customRules - Optional custom rules for axe testing
+   * @returns {Promise<AxeTestResult>} - Results from axe testing
    */
-  async test(element: HTMLElement, customRules?: axe.RuleObject) {
+  async test(
+    input: HTMLElement | string,
+    customRules?: axe.RuleObject
+  ): Promise<AxeTestResult> {
     const results = await axe.run(
-      element,
+      this.getElement(input),
       customRules
         ? { ...this.axeRunOptions, rules: customRules }
         : this.axeRunOptions
@@ -77,8 +83,36 @@ export class AxeTester {
   }
 
   /**
-   * Process Axe results and generate enhanced report
+   * Returns an Element for the given input
+   *
+   * @param {HTMLElement|string} input - an HTML element or HTML string
+   * @returns {Element}
    */
+  private getElement(input: HTMLElement | string): Element {
+    let element;
+
+    if (typeof input === "string") {
+      // Verify the input string is valid html
+      try {
+        new JSDOM(`<!DOCTYPE html><body>${input}</body></html>`);
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : "";
+        throw new Error(`Failed to parse HTML string: ${msg}`);
+      }
+
+      // It's valid, replace the current body's inner html
+      document.body.innerHTML = input;
+      element = document.body;
+    } else if (input instanceof HTMLElement) {
+      // If it's already an HTMLElement, use it directly
+      element = input;
+    } else {
+      throw new Error("Input must be an HTMLElement or a valid HTML string");
+    }
+
+    return element;
+  }
+
   private processResults(results: axe.AxeResults) {
     const result = {
       ...results,
@@ -107,9 +141,6 @@ export class AxeTester {
     return result;
   }
 
-  /**
-   * Calculate a severity score based on violations
-   */
   private calculateSeverityScore(violations: axe.Result[]) {
     return violations.reduce((score, violation) => {
       const impactMultiplier =
@@ -123,7 +154,7 @@ export class AxeTester {
  * Jest matcher for accessibility testing
  */
 export async function toBeAccessible(
-  received: HTMLElement,
+  received: HTMLElement | string,
   options?: AxeTesterConfig
 ) {
   const tester = new AxeTester(options);
@@ -135,7 +166,6 @@ export async function toBeAccessible(
   };
 }
 
-// Extend Jest's expect with custom matcher
 declare global {
   namespace jest {
     interface Matchers<R> {
