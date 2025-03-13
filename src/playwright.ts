@@ -24,19 +24,12 @@ export class PlaywrightAxeTester extends AxeTester<Page> {
   }
 }
 
-export async function testPageAccessibility(
-  page: Page,
-  options?: AxeTesterConfig
-) {
-  const tester = new PlaywrightAxeTester();
-  return tester.test(page, options);
-}
-
 export async function toBeAccessible(page: Page, options?: AxeTesterConfig) {
   const tester = new PlaywrightAxeTester(options);
   const result = await tester.test(page);
 
   return {
+    name: "toBeAccessible",
     pass: result.passed,
     message: () => result.violationMessages.join("\n"),
   };

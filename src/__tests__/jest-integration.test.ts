@@ -3,9 +3,7 @@ import { JestAxeTester, toBeAccessible } from "../jest";
 expect.extend({ toBeAccessible });
 
 describe("JestAxeTester Integration Tests", () => {
-  async function shouldProperlyDetectAccessibilityViolationsInActualHtml(
-    input: HTMLElement | string
-  ) {
+  async function assertViolations(input: HTMLElement | string) {
     const tester = new JestAxeTester();
     const result = await tester.test(input);
 
@@ -19,7 +17,7 @@ describe("JestAxeTester Integration Tests", () => {
   }
 
   describe("with element", () => {
-    it("should properly detect accessibility violations in actual HTML", async () => {
+    it("should detect accessibility violations in html", async () => {
       document.body.innerHTML = `
         <div>
           <h1>Hello World</h1>
@@ -28,12 +26,10 @@ describe("JestAxeTester Integration Tests", () => {
         </div>
       `;
 
-      await shouldProperlyDetectAccessibilityViolationsInActualHtml(
-        document.body
-      );
+      await assertViolations(document.body);
     });
 
-    it("should pass for accessible HTML", async () => {
+    it("should pass for accessible html", async () => {
       document.body.innerHTML = `
         <main>
           <h1>Hello World</h1>
@@ -64,7 +60,7 @@ describe("JestAxeTester Integration Tests", () => {
   });
 
   describe("with html string", () => {
-    it("should properly detect accessibility violations in actual HTML", async () => {
+    it("should detect accessibility violations in html", async () => {
       const htmlString = `
         <div>
           <h1>Hello World</h1>
@@ -73,10 +69,10 @@ describe("JestAxeTester Integration Tests", () => {
         </div>
       `;
 
-      await shouldProperlyDetectAccessibilityViolationsInActualHtml(htmlString);
+      await assertViolations(htmlString);
     });
 
-    it("should pass for accessible HTML", async () => {
+    it("should pass for accessible html", async () => {
       const htmlString = `
         <main>
           <h1>Hello World</h1>

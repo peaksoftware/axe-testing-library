@@ -87,7 +87,10 @@ export class AxeTester<TInput> {
         return acc;
       }, {}),
       violationMessages: results.violations.map(
-        (v) => `${v.impact?.toUpperCase()}: ${v.description} (${v.helpUrl})`
+        (v) =>
+          `${v.impact?.toUpperCase()}: ${v.description}. See ${
+            v.helpUrl
+          } (Rule ID: ${v.id})`
       ),
       severityScore: this.calculateSeverityScore(results.violations),
     };
