@@ -1,47 +1,26 @@
-import type { Locator, Page } from "playwright";
+import type { Page } from "playwright";
 import { AxeTester, AxeTesterConfig } from ".";
 import axe from "axe-core";
 
-export class PlaywrightAxeTester extends AxeTester<Page | Locator | string> {
+export class PlaywrightAxeTester extends AxeTester<Page> {
   constructor(config: AxeTesterConfig = {}) {
     super(config);
   }
 
-  private static async pageToHtml(page: Page): Promise<string> {
-    return page.content();
-  }
+  async test(page: Page, runOptions?: axe.RunOptions) {
+    const options = runOptions
+      ? { ...this.axeRunOptions, ...runOptions }
+      : this.axeRunOptions;
 
-  private static async locatorToHtml(locator: Locator): Promise<string> {
-    return locator.innerHTML();
-  }
+    // This loads axe into the page
+    await page.evaluate(axe.source);
 
-  private static isPage(input: Page | Locator): input is Page {
-    return "goto" in input && typeof input.goto === "function";
-  }
-
-  private static isLocator(input: Page | Locator): input is Locator {
-    return (
-      "click" in input &&
-      typeof input.click === "function" &&
-      !this.isPage(input)
+    const results = await page.evaluate(
+      (options) => (window as any).axe.run(document, options),
+      options
     );
-  }
 
-  async test(input: Page | Locator | string, runOptions?: axe.RunOptions) {
-    if (typeof input === "string") {
-      return super.runAxe(input, runOptions);
-    }
-
-    let html;
-    if (PlaywrightAxeTester.isLocator(input)) {
-      html = await PlaywrightAxeTester.locatorToHtml(input);
-    } else if (PlaywrightAxeTester.isPage(input)) {
-      html = await PlaywrightAxeTester.pageToHtml(input);
-    } else {
-      throw new Error("input is not a page, locator, or string");
-    }
-
-    return super.runAxe(html, runOptions);
+    return super.processResults(results);
   }
 }
 

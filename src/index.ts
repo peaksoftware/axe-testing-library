@@ -1,6 +1,4 @@
 import axe from "axe-core";
-import { JSDOM } from "jsdom";
-import { type Page } from "playwright-core";
 
 type Config = {
   /**
@@ -41,8 +39,8 @@ export interface AxeTestResult extends axe.AxeResults {
  * Accessibility Testing Class
  */
 export class AxeTester<TInput> {
-  private axeRunOptions: axe.RunOptions;
-  private axeTesterConfig: Config;
+  protected axeRunOptions: axe.RunOptions;
+  protected axeTesterConfig: Config;
 
   constructor({
     severityLevels = {
@@ -77,57 +75,7 @@ export class AxeTester<TInput> {
     throw new Error("the test() method must be implemented");
   }
 
-  /**
-   * Tests an HTML element or HTML string for accessibility issues
-   *
-   * @param {HTMLElement|string} input - The HTML element or HTML string to test
-   * @param {axe.RunOptions} runOptions - Optional custom run options for one-off testing
-   * @returns {Promise<AxeTestResult>} - Results from axe testing
-   */
-  protected async runAxe(
-    input: HTMLElement | string,
-    runOptions?: axe.RunOptions
-  ): Promise<AxeTestResult> {
-    const results = await axe.run(
-      this.getElement(input),
-      runOptions ? { ...this.axeRunOptions, ...runOptions } : this.axeRunOptions
-    );
-    return this.processResults(results);
-  }
-
-  /**
-   * Returns an Element for the given input
-   *
-   * @param {HTMLElement|string} input - an HTML element or HTML string
-   * @returns {Element}
-   */
-  private getElement(input: HTMLElement | string): Element {
-    let element;
-
-    if (typeof input === "string") {
-      // Verify the input string is valid html
-      // TODO: JSDOM is very lenient and will make bad html valid instead of throwing. should we even check?
-      try {
-        new JSDOM(`<!DOCTYPE html><body>${input}</body></html>`);
-      } catch (error) {
-        const msg = error instanceof Error ? error.message : "";
-        throw new Error(`Failed to parse HTML string: ${msg}`);
-      }
-
-      // It's valid, replace the current body's inner html
-      document.body.innerHTML = input;
-      element = document.body;
-    } else if (input instanceof HTMLElement) {
-      // If it's already an HTMLElement, use it directly
-      element = input;
-    } else {
-      throw new Error("Input must be an HTMLElement or a valid HTML string");
-    }
-
-    return element;
-  }
-
-  private processResults(results: axe.AxeResults) {
+  protected processResults(results: axe.AxeResults) {
     const result = {
       ...results,
       passed: results.violations.length === 0,
