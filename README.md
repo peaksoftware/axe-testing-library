@@ -9,7 +9,7 @@ npm install axe-testing-library
 ## Supported Test Runners
 
 - [x] Jest
-- [ ] Playwright
+- [x] Playwright
 - [ ] Puppeteer
 - [ ] Mocha
 - [ ] Jasmine
