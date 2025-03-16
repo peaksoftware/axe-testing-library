@@ -24,6 +24,9 @@ export class PlaywrightAxeTester extends AxeTester<Page> {
   }
 }
 
+/**
+ * Playwright matcher for accessibility testing
+ */
 export async function toBeAccessible(page: Page, options?: AxeTesterConfig) {
   const tester = new PlaywrightAxeTester(options);
   const result = await tester.test(page);

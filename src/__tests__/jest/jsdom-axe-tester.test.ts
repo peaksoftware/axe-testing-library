@@ -1,5 +1,6 @@
 import axe from "axe-core";
-import { JestAxeTester, toBeAccessible } from "../jest";
+import { toBeAccessible } from "../../jest";
+import { JSDOMAxeTester } from "../../jsdom";
 
 jest.mock("axe-core", () => ({
   run: jest.fn(),
@@ -7,7 +8,7 @@ jest.mock("axe-core", () => ({
 
 expect.extend({ toBeAccessible });
 
-describe("JestAxeTester", () => {
+describe("JSDOMAxeTester", () => {
   let element: HTMLElement;
   let htmlString: string;
 
@@ -19,7 +20,7 @@ describe("JestAxeTester", () => {
 
   describe("test()", () => {
     it("should call axe.run with the element and config", async () => {
-      const tester = new JestAxeTester({ reporter: "v2" });
+      const tester = new JSDOMAxeTester({ reporter: "v2" });
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
         passes: [],
@@ -39,7 +40,7 @@ describe("JestAxeTester", () => {
 
     it("should call customReporter when provided", async () => {
       const customReporter = jest.fn();
-      const tester = new JestAxeTester({ customReporter });
+      const tester = new JSDOMAxeTester({ customReporter });
 
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
@@ -61,7 +62,7 @@ describe("JestAxeTester", () => {
     });
 
     it("should throw when failFast is true and violations exist", async () => {
-      const tester = new JestAxeTester({ failFast: true });
+      const tester = new JSDOMAxeTester({ failFast: true });
 
       const mockViolation: Partial<axe.Result> = {
         id: "test-violation",
@@ -88,7 +89,7 @@ describe("JestAxeTester", () => {
     async function shouldProcessAndReturnViolationResultsCorrectly(
       input: HTMLElement | string
     ) {
-      const tester = new JestAxeTester();
+      const tester = new JSDOMAxeTester();
       const mockViolation: Partial<axe.Result> = {
         id: "test-violation",
         impact: "serious",
@@ -129,7 +130,7 @@ describe("JestAxeTester", () => {
   });
 
   describe("toBeAccessible matcher", () => {
-    it("should pass custom options to JestAxeTester", async () => {
+    it("should pass custom options to JSDOMAxeTester", async () => {
       const mockResults: Partial<axe.AxeResults> = {
         violations: [],
         passes: [],

@@ -1,8 +1,8 @@
-import { type AxeTesterConfig } from ".";
+import { AxeTesterConfig } from ".";
 import { JSDOMAxeTester } from "./jsdom";
 
 /**
- * Jest matcher for accessibility testing
+ * Vitest matcher for accessibility testing
  */
 export async function toBeAccessible(
   received: HTMLElement | string,
@@ -15,12 +15,4 @@ export async function toBeAccessible(
     pass: result.passed,
     message: () => result.violationMessages.join("\n"),
   };
-}
-
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeAccessible(options?: AxeTesterConfig): Promise<R>;
-    }
-  }
 }

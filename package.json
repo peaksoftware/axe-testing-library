@@ -7,9 +7,10 @@
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
-    "test": "npm run jest && npm run playwright",
+    "test": "npm run jest && npm run vitest && npm run playwright",
     "jest": "jest",
     "playwright": "npx playwright test",
+    "vitest": "vitest run",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [
@@ -31,7 +32,7 @@
     "url": "https://github.com/yourusername/ts-a11y-tester.git"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "axe-core": "^4.10.3",
@@ -52,6 +53,7 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
   }
 }

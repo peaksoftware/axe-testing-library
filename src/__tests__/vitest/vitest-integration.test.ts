@@ -1,10 +1,12 @@
-import { JestAxeTester, toBeAccessible } from "../jest";
+import { JSDOMAxeTester } from "../../jsdom";
+import { toBeAccessible } from "../../vitest";
+import { expect, describe, it } from "vitest";
 
 expect.extend({ toBeAccessible });
 
-describe("JestAxeTester Integration Tests", () => {
+describe("JSDOMAxeTester integration tests for jest", () => {
   async function assertViolations(input: HTMLElement | string) {
-    const tester = new JestAxeTester();
+    const tester = new JSDOMAxeTester();
     const result = await tester.test(input);
 
     expect(result.passed).toBe(false);

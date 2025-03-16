@@ -5,7 +5,7 @@ import {
   type Page,
   type Browser,
 } from "@playwright/test";
-import { PlaywrightAxeTester, toBeAccessible } from "../playwright";
+import { PlaywrightAxeTester, toBeAccessible } from "../../playwright";
 
 const expect = baseExpect.extend({ toBeAccessible });
 
