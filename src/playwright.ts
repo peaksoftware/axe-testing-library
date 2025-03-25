@@ -1,5 +1,5 @@
 import type { Page } from "playwright";
-import { AxeTester, AxeTesterConfig } from ".";
+import { AxeTester, AxeTesterConfig } from "./core";
 import axe from "axe-core";
 
 export class PlaywrightAxeTester extends AxeTester<Page> {

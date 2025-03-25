@@ -1,4 +1,4 @@
-import { AxeTesterConfig } from ".";
+import { AxeTesterConfig } from "./core";
 import { JSDOMAxeTester } from "./jsdom";
 
 /**

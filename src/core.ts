@@ -92,7 +92,12 @@ export class AxeTester<TInput> {
             v.helpUrl
           } (Rule ID: ${v.id})`
       ),
-      severityScore: this.calculateSeverityScore(results.violations),
+      severityScore: results.violations.reduce((score, violation) => {
+        const impact =
+          this.axeTesterConfig.severityLevels?.[violation.impact || "minor"] ||
+          1;
+        return score + impact;
+      }, 0),
     };
 
     if (this.axeTesterConfig.customReporter) {
@@ -104,13 +109,5 @@ export class AxeTester<TInput> {
     }
 
     return result;
-  }
-
-  private calculateSeverityScore(violations: axe.Result[]) {
-    return violations.reduce((score, violation) => {
-      const impact =
-        this.axeTesterConfig.severityLevels?.[violation.impact || "minor"] || 1;
-      return score + impact;
-    }, 0);
   }
 }

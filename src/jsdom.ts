@@ -1,6 +1,6 @@
 import axe from "axe-core";
 import { JSDOM } from "jsdom";
-import { AxeTester, type AxeTesterConfig } from ".";
+import { AxeTester, type AxeTesterConfig } from "./core";
 
 export class JSDOMAxeTester extends AxeTester<HTMLElement | string> {
   constructor(config: AxeTesterConfig = {}) {

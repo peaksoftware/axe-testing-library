@@ -1,4 +1,4 @@
-import { type AxeTesterConfig } from ".";
+import { type AxeTesterConfig } from "./core";
 import { JSDOMAxeTester } from "./jsdom";
 
 /**
