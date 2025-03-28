@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.1.3
+
+### Patch Changes
+
+- [`9c30713`](https://github.com/peaksoftware/axe-testing-library/commit/9c307132ede2cf2ce0431c12aaaca68fd6750cf7) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - add emoji to violation msg, add output img to readme
+
 ## 0.1.2
 
 ### Patch Changes
