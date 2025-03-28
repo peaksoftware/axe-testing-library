@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.1.2
+
+### Patch Changes
+
+- [`3c76061`](https://github.com/peaksoftware/axe-testing-library/commit/3c76061086c7f29d376d762e6c46b3072cd52a23) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - Update readme and add contributing
+
 ## 0.1.1
 
 ### Patch Changes
