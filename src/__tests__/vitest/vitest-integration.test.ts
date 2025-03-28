@@ -4,7 +4,7 @@ import { expect, describe, it } from "vitest";
 
 expect.extend({ toBeAccessible });
 
-describe("JSDOMAxeTester integration tests for jest", () => {
+describe("JSDOMAxeTester integration tests for vitest", () => {
   async function assertViolations(input: HTMLElement | string) {
     const tester = new JSDOMAxeTester();
     const result = await tester.test(input);
