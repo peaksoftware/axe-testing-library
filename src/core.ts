@@ -88,7 +88,7 @@ export class AxeTester<TInput> {
       }, {}),
       violationMessages: results.violations.map(
         (v) =>
-          `${v.impact?.toUpperCase()}: ${v.description}. See ${
+          `⚠️  ${v.impact?.toUpperCase()}: ${v.description}. \n⚠️  See ${
             v.helpUrl
           } (Rule ID: ${v.id})`
       ),

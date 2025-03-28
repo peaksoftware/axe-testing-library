@@ -84,6 +84,12 @@ test("should be accessible", async ({ page }) => {
 });
 ```
 
+### Example Output
+
+For each accessibility violation you have, `axe-testing-library` will report the violation message along with a link to the rule. It also provide the rule id.
+
+![axe testing library output with violation message, and link to rule and its rule id](./output.png)
+
 ## Configuration
 
 Pass [axe run options](https://www.deque.com/axe/core-documentation/api-documentation/#options-parameter) to customize checks:
