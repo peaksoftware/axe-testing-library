@@ -11,6 +11,5 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  splitting: false,
   external: ["axe-core", "jest", "vitest", "@playwright/test", "jsdom"],
 });

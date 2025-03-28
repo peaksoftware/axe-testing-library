@@ -27,7 +27,7 @@
     "vitest": "vitest run",
     "lint": "eslint . --ext .ts",
     "changeset": "changeset",
-    "release": "changeset publish"
+    "release": "npm run build && changeset publish"
   },
   "keywords": [
     "accessibility",
