@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.1.1
+
+### Patch Changes
+
+- [`f339489`](https://github.com/peaksoftware/axe-testing-library/commit/f339489291012168d3358f2fabbc914bb9b12a24) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - add build to release script
+
 ## 0.1.0
 
 ### Minor Changes
