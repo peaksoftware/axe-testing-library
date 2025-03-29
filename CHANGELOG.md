@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.1.4
+
+### Patch Changes
+
+- [`a1d345f`](https://github.com/peaksoftware/axe-testing-library/commit/a1d345f742f377d52d6b1b8041fc84a790066de8) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - improve type declarations for jest/vitest
+
 ## 0.1.3
 
 ### Patch Changes
