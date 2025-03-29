@@ -14,7 +14,7 @@ Support for more testing tools like Cypress, Puppeteer, Jasmine, and Mocha are p
 ## Installation
 
 ```bash
-npm install axe-testing-library
+npm install --save-dev axe-testing-library
 ```
 
 This library assumes you have already installed the dependencies required by the test framework you are using. For Jest and Vite, you must be using JSDOM as the test environment. This is on by default with Jest, but [Vitest requires a configuration change](https://vitest.dev/config/#environment).
@@ -69,6 +69,25 @@ it("should be accessible", async () => {
   `;
   await expect(htmlString).toBeAccessible();
 });
+```
+
+#### A note about JSDOM
+
+aXe internally creates a canvas instance when it runs, so you may see not implemented warnings in your console:
+
+```bash
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+```
+
+You can install a mock yourself, or mock them yourself:
+
+```ts
+// vitest.setup.ts
+import { vi } from "vitest";
+HTMLCanvasElement.prototype.getContext = vi.fn();
+
+// jest.setup.ts
+HTMLCanvasElement.prototype.getContext = jest.fn();
 ```
 
 ### Playwright

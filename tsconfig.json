@@ -10,8 +10,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "jest.d.ts", "vitest.d.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

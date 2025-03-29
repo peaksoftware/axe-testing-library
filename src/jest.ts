@@ -16,11 +16,3 @@ export async function toBeAccessible(
     message: () => result.violationMessages.join("\n"),
   };
 }
-
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeAccessible(options?: AxeTesterConfig): Promise<R>;
-    }
-  }
-}
