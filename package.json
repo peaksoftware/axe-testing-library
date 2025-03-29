@@ -1,6 +1,6 @@
 {
   "name": "axe-testing-library",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Extensions for automated aXe accessibility testing for popular test tooling",
   "exports": {
     "./jest": {

@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.1.5
+
+### Patch Changes
+
+- [`8571898`](https://github.com/peaksoftware/axe-testing-library/commit/85718980aec8168fc507fd280f53895d6ce7e922) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - make sure vitest matcher returns promise
+
 ## 0.1.4
 
 ### Patch Changes
