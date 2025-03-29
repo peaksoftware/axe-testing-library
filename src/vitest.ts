@@ -19,7 +19,7 @@ export async function toBeAccessible(
 }
 
 interface CustomMatchers<R = unknown> {
-  toBeAccessible: (options?: AxeTesterConfig) => R;
+  toBeAccessible(options?: AxeTesterConfig): Promise<R>;
 }
 
 declare module "vitest" {
