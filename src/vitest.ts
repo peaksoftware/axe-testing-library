@@ -1,3 +1,4 @@
+import "vitest";
 import { AxeTesterConfig } from "./core";
 import { JSDOMAxeTester } from "./jsdom";
 
@@ -15,4 +16,13 @@ export async function toBeAccessible(
     pass: result.passed,
     message: () => result.violationMessages.join("\n"),
   };
+}
+
+interface CustomMatchers<R = unknown> {
+  toBeAccessible: (options?: AxeTesterConfig) => R;
+}
+
+declare module "vitest" {
+  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
