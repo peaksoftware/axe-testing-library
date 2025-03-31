@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.1.6
+
+### Patch Changes
+
+- [`34dc2ce`](https://github.com/peaksoftware/axe-testing-library/commit/34dc2ce104a11556411dae6fe90494170b08721d) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - update npm ignore to reduce bundle size
+
 ## 0.1.5
 
 ### Patch Changes
