@@ -16,6 +16,11 @@ type Config = {
    * Custom reporter function
    */
   customReporter?: (results: AxeTestResult) => void;
+
+  /**
+   * Custom violation message function
+   */
+  formatMessage?: (violation: axe.Result) => string;
 };
 
 export type AxeTesterConfig = Config & axe.RunOptions;
@@ -47,12 +52,14 @@ export class AxeTester<TInput> {
     },
     failFast = false,
     customReporter,
+    formatMessage,
     ...runOptions
   }: AxeTesterConfig = {}) {
     this.axeTesterConfig = {
       severityLevels,
       failFast,
       customReporter,
+      formatMessage,
     };
     this.axeRunOptions = runOptions;
   }
@@ -82,20 +89,25 @@ export class AxeTester<TInput> {
         acc[impact] = [...(acc[impact] || []), violation];
         return acc;
       }, {}),
-      violationMessages: results.violations.map((v) => {
-        const impactColor = {
-          critical: chalk.red,
-          serious: chalk.magenta,
-          moderate: chalk.yellow,
-          minor: chalk.blue,
-        }[v.impact ?? "minor"];
+      violationMessages: results.violations.map(
+        this.axeTesterConfig.formatMessage
+          ? this.axeTesterConfig.formatMessage
+          : (v) => {
+              const impactColor = {
+                critical: chalk.red,
+                serious: chalk.magenta,
+                moderate: chalk.yellow,
+                minor: chalk.blue,
+                unknown: chalk.cyan,
+              }[v.impact ?? "unknown"];
 
-        return impactColor(
-          `${impactColor.bold(v.impact?.toUpperCase())}: ${
-            v.description
-          }. \nSee ${impactColor.underline(v.helpUrl)} (Rule ID: ${v.id})`
-        );
-      }),
+              return impactColor(
+                `${impactColor.bold(v.impact?.toUpperCase())}: ${
+                  v.description
+                }. \nSee ${impactColor.underline(v.helpUrl)} (Rule ID: ${v.id})`
+              );
+            }
+      ),
       severityScore: results.violations.reduce((score, violation) => {
         const impact =
           this.axeTesterConfig.severityLevels?.[violation.impact || "minor"] ||
