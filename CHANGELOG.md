@@ -1,5 +1,11 @@
 # axe-testing-library
 
+## 0.2.0
+
+### Minor Changes
+
+- [`3c9bd45`](https://github.com/peaksoftware/axe-testing-library/commit/3c9bd457db75e774f89c065048b4534b68990a10) Thanks [@ealexhaywood](https://github.com/ealexhaywood)! - remove some hidden configuration options, improve validation result formatting
+
 ## 0.1.6
 
 ### Patch Changes
