@@ -76,12 +76,21 @@ export class AxeTester<TInput> {
       ...results,
       passed: results.violations.length === 0,
       violationsByImpact: results.violations.reduce<
-        Record<string, axe.Result[]>
-      >((acc, violation) => {
-        const impact = violation.impact ?? "unknown";
-        acc[impact] = [...(acc[impact] || []), violation];
-        return acc;
-      }, {}),
+        Record<NonNullable<axe.ImpactValue> | "unknown", axe.Result[]>
+      >(
+        (acc, violation) => {
+          const impact = violation.impact ?? "unknown";
+          acc[impact] = [...acc[impact], violation];
+          return acc;
+        },
+        {
+          critical: [],
+          serious: [],
+          moderate: [],
+          minor: [],
+          unknown: [],
+        }
+      ),
       violationMessages: results.violations.map(
         this.axeTesterConfig.formatMessage
           ? this.axeTesterConfig.formatMessage
