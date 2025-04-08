@@ -1,15 +1,11 @@
 import axe from "axe-core";
+import chalk from "chalk";
 
 type Config = {
   /**
    * Custom severity levels for violations
    */
-  severityLevels?: {
-    critical?: number;
-    serious?: number;
-    moderate?: number;
-    minor?: number;
-  };
+  severityLevels?: Record<NonNullable<axe.ImpactValue>, number>;
 
   /**
    * Whether to throw on first violation
@@ -82,16 +78,24 @@ export class AxeTester<TInput> {
       violationsByImpact: results.violations.reduce<
         Record<string, axe.Result[]>
       >((acc, violation) => {
-        const impact = violation.impact || "unknown";
+        const impact = violation.impact ?? "unknown";
         acc[impact] = [...(acc[impact] || []), violation];
         return acc;
       }, {}),
-      violationMessages: results.violations.map(
-        (v) =>
-          `⚠️  ${v.impact?.toUpperCase()}: ${v.description}. \n⚠️  See ${
-            v.helpUrl
-          } (Rule ID: ${v.id})`
-      ),
+      violationMessages: results.violations.map((v) => {
+        const impactColor = {
+          critical: chalk.red,
+          serious: chalk.magenta,
+          moderate: chalk.yellow,
+          minor: chalk.blue,
+        }[v.impact ?? "minor"];
+
+        return impactColor(
+          `${impactColor.bold(v.impact?.toUpperCase())}: ${
+            v.description
+          }. \nSee ${impactColor.underline(v.helpUrl)} (Rule ID: ${v.id})`
+        );
+      }),
       severityScore: results.violations.reduce((score, violation) => {
         const impact =
           this.axeTesterConfig.severityLevels?.[violation.impact || "minor"] ||

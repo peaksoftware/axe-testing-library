@@ -1,4 +1,5 @@
 import axe from "axe-core";
+import stripAnsi from "strip-ansi";
 import { toBeAccessible } from "../../jest";
 import { JSDOMAxeTester } from "../../jsdom";
 
@@ -112,7 +113,9 @@ describe("JSDOMAxeTester", () => {
       expect(result.passed).toBe(false);
       expect(result.violations).toHaveLength(1);
       expect(result.violationsByImpact).toHaveProperty("serious");
-      expect(result.violationMessages[0]).toMatch(/SERIOUS: Test violation/);
+      expect(stripAnsi(result.violationMessages[0])).toMatch(
+        /SERIOUS: Test violation/
+      );
       expect(result.severityScore).toBe(5); // Based on default severity levels
     }
 
@@ -193,7 +196,9 @@ describe("JSDOMAxeTester", () => {
       }
 
       expect(error).toBeDefined();
-      expect((error as Error).message).toMatch(/MODERATE: Test violation/);
+      expect(stripAnsi((error as Error).message)).toMatch(
+        /MODERATE: Test violation/
+      );
     }
 
     describe("with element", () => {

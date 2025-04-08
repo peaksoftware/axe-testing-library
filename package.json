@@ -70,7 +70,8 @@
     }
   },
   "dependencies": {
-    "axe-core": "^4"
+    "axe-core": "^4",
+    "chalk": "^4"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
@@ -86,6 +87,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^26.0.0",
     "playwright-core": "^1.50.1",
+    "strip-ansi": "^6",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",
