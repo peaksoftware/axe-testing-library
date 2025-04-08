@@ -25,6 +25,7 @@
     "jest": "jest",
     "playwright": "npx playwright test",
     "vitest": "vitest run",
+    "vitest:watch": "vitest watch",
     "lint": "eslint . --ext .ts",
     "changeset": "changeset",
     "release": "npm run build && changeset publish"

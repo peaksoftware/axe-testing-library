@@ -62,31 +62,6 @@ describe("JSDOMAxeTester", () => {
       );
     });
 
-    it("should throw when failFast is true and violations exist", async () => {
-      const tester = new JSDOMAxeTester({ failFast: true });
-
-      const mockViolation: Partial<axe.Result> = {
-        id: "test-violation",
-        impact: "critical",
-        description: "Critical violation",
-        helpUrl: "https://example.com/help",
-        nodes: [],
-      };
-
-      const mockResults: Partial<axe.AxeResults> = {
-        violations: [mockViolation as axe.Result],
-        passes: [],
-        incomplete: [],
-        inapplicable: [],
-      };
-
-      (axe.run as jest.Mock).mockResolvedValue(mockResults);
-
-      await expect(tester.test(element)).rejects.toThrow(
-        "Accessibility violations detected"
-      );
-    });
-
     async function shouldProcessAndReturnViolationResultsCorrectly(
       input: HTMLElement | string
     ) {

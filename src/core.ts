@@ -8,11 +8,6 @@ type Config = {
   severityLevels?: Record<NonNullable<axe.ImpactValue>, number>;
 
   /**
-   * Whether to throw on first violation
-   */
-  failFast?: boolean;
-
-  /**
    * Custom reporter function
    */
   customReporter?: (results: AxeTestResult) => void;
@@ -50,14 +45,12 @@ export class AxeTester<TInput> {
       moderate: 3,
       minor: 1,
     },
-    failFast = false,
     customReporter,
     formatMessage,
     ...runOptions
   }: AxeTesterConfig = {}) {
     this.axeTesterConfig = {
       severityLevels,
-      failFast,
       customReporter,
       formatMessage,
     };
@@ -118,10 +111,6 @@ export class AxeTester<TInput> {
 
     if (this.axeTesterConfig.customReporter) {
       this.axeTesterConfig.customReporter(result);
-    }
-
-    if (this.axeTesterConfig.failFast && results.violations.length > 0) {
-      throw new Error("Accessibility violations detected");
     }
 
     return result;
